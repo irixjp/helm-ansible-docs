@@ -53,6 +53,7 @@
     (helm-ansible-docs--get-docs)))
 
 (defun helm-ansible-docs--candidates ()
+  "Build data for candidates."
   (helm-ansible-docs--initialize)
   (mapcar #'(lambda (x)
               (list (concatenate 'string (car x) ": " (cdr x))
@@ -61,6 +62,11 @@
 
 (defun helm-ansible-docs--insert (module)
   (insert (car module)))
+
+(defun helm-ansible-docs--insert-in-helm-buffer ()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'helm-ansible-docs--insert)))
 
 (defun helm-ansible-docs--open-url (module)
   (browse-url (concatenate 'string
@@ -79,6 +85,13 @@
       (view-mode)
       (display-buffer buffer))))
 
+(defvar helm-ansible-docs-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "C-c i") 'helm-ansible-docs--insert-in-helm-buffer)
+    map)
+  "Keymap for `helm-ansible-docs'.")
+
 (defvar helm-ansible-docs--source
   (helm-build-sync-source "Ansible Modules list"
     :candidates #'helm-ansible-docs--candidates
@@ -93,7 +106,8 @@
   "Display helm interface for ansbile docs."
   (interactive)
   (helm :sources '(helm-ansible-docs--source)
-        :buffer "*helm ansible docs*"))
+        :buffer "*helm ansible docs*"
+        :keymap helm-ansible-docs-map))
 
 (define-key global-map (kbd "C-c d a") 'helm-ansible-docs)
 
