@@ -3,7 +3,7 @@
 ## Overview
 
 This is a helm interface for ansible-doc command.
-It helps you to develop a playbook.
+It helps you to develop playbooks.
 
 It works like the below:
 
@@ -12,8 +12,8 @@ It works like the below:
 
 ## Requirements
 
-Helm
-
+- Helm
+- `ansible-doc` command
 
 ## Installation
 
